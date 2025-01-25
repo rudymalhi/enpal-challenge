@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: Enpal Challenge API
+  version: 1.0.0
+  description: API for querying available calendar slots.
+servers:
+  - url: http://localhost:3000
+paths:
+  /calendar/query:
+    post:
+      summary: Query available calendar slots
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalendarQueryRequest'
+      responses:
+        '200':
+          description: A list of available slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AvailableSlot'
+components:
+  schemas:
+    ProductName:
+      type: string
+      enum:
+        - SolarPanels
+        - Heatpumps
+    Language:
+      type: string
+      enum:
+        - German
+        - English
+    Rating:
+      type: string
+      enum:
+        - Bronze
+        - Silver
+        - Gold
+    CalendarQueryRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductName'
+        language:
+          $ref: '#/components/schemas/Language'
+        rating:
+          $ref: '#/components/schemas/Rating'
+      required:
+        - date
+        - products
+        - language
+        - rating
+    AvailableSlot:
+      type: object
+      properties:
+        available_count:
+          type: integer
+        start_date:
+          type: string
+          format: date-time
+      required:
+        - available_count
+        - start_date
